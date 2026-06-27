@@ -30,7 +30,7 @@ Cooked Meter is an AI exam-prep assistant. A student uploads a PDF of their exam
 |------|------|-----|
 | Framework | **Next.js 16 (App Router)** | Frontend + serverless API in one repo, native Vercel deploy |
 | Hosting | **Vercel** (free tier) | Free, Git-based deploys |
-| LLM | **Groq — Llama 3.3 70B** | Fast, free, JSON mode |
+| LLM | **Groq — Llama 3.1 8B Instant** | Fast, free, JSON mode, generous rate limits |
 | PDF parsing | **pdf.js** (client) | Extract text before it ever leaves the browser |
 | UI | **React 19 + Tailwind CSS v4** | Fast, clean UI for the Cooked Meter |
 

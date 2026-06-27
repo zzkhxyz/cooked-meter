@@ -13,7 +13,9 @@ import type { AnalyzeRequest } from "@/lib/types";
 export const maxDuration = 30;
 export const runtime = "nodejs";
 
-const MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+// 8b-instant has a much higher daily token budget than 70b on Groq's free tier,
+// so the public demo stays up under traffic. Override via GROQ_MODEL if needed.
+const MODEL = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
 
 function bad(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
