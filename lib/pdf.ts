@@ -21,6 +21,21 @@ export class ScannedPdfError extends Error {
  * has no extractable text layer (i.e. it's a scan / images only).
  */
 export async function extractPdfText(file: File): Promise<string> {
+  // iOS Safari < 17.4 lacks Promise.withResolvers, which pdf.js calls — without
+  // this it throws "undefined is not a function". Polyfill before loading pdf.js.
+  const P = Promise as unknown as { withResolvers?: unknown };
+  if (typeof P.withResolvers !== "function") {
+    P.withResolvers = function <T>() {
+      let resolve!: (v: T | PromiseLike<T>) => void;
+      let reject!: (r?: unknown) => void;
+      const promise = new Promise<T>((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
+      return { promise, resolve, reject };
+    };
+  }
+
   // Use the LEGACY build: it's transpiled for broad browser support, including
   // older mobile Safari where the modern build crashes with
   // "undefined is not a function" (missing APIs like Promise.withResolvers).
