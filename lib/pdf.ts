@@ -17,24 +17,59 @@ export class ScannedPdfError extends Error {
 }
 
 /**
- * Extract all text from a PDF file. Throws ScannedPdfError when the document
- * has no extractable text layer (i.e. it's a scan / images only).
+ * Polyfills the APIs pdf.js needs that Safari lacks. The critical one:
+ * `ReadableStream` async iteration (`for await...of`) — Safari does NOT implement
+ * `ReadableStream.prototype[Symbol.asyncIterator]`, so pdf.js's getTextContent
+ * crashes with "undefined is not a function". We also add Promise.withResolvers
+ * (missing on iOS Safari < 17.4) for good measure.
  */
-export async function extractPdfText(file: File): Promise<string> {
-  // iOS Safari < 17.4 lacks Promise.withResolvers, which pdf.js calls — without
-  // this it throws "undefined is not a function". Polyfill before loading pdf.js.
-  const P = Promise as unknown as { withResolvers?: unknown };
+function applySafariPolyfills() {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const P = Promise as any;
   if (typeof P.withResolvers !== "function") {
-    P.withResolvers = function <T>() {
-      let resolve!: (v: T | PromiseLike<T>) => void;
-      let reject!: (r?: unknown) => void;
-      const promise = new Promise<T>((res, rej) => {
+    P.withResolvers = function () {
+      let resolve: any, reject: any;
+      const promise = new Promise((res, rej) => {
         resolve = res;
         reject = rej;
       });
       return { promise, resolve, reject };
     };
   }
+
+  const RS = (globalThis as any).ReadableStream;
+  if (RS && typeof RS.prototype[Symbol.asyncIterator] !== "function") {
+    const values = function (this: any) {
+      const reader = this.getReader();
+      return {
+        next() {
+          return reader.read().then((r: any) => {
+            if (r.done) reader.releaseLock();
+            return r;
+          });
+        },
+        return(value: any) {
+          const cancel = reader.cancel(value);
+          reader.releaseLock();
+          return cancel.then(() => ({ done: true, value }));
+        },
+        [Symbol.asyncIterator]() {
+          return this;
+        },
+      };
+    };
+    if (typeof RS.prototype.values !== "function") RS.prototype.values = values;
+    RS.prototype[Symbol.asyncIterator] = RS.prototype.values;
+  }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+}
+
+/**
+ * Extract all text from a PDF file. Throws ScannedPdfError when the document
+ * has no extractable text layer (i.e. it's a scan / images only).
+ */
+export async function extractPdfText(file: File): Promise<string> {
+  applySafariPolyfills();
 
   // Use the LEGACY build: it's transpiled for broad browser support, including
   // older mobile Safari where the modern build crashes with
