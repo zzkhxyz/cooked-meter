@@ -24,6 +24,15 @@
     "expectTopics": ["gradient", "regular", "regress", "tree"]
   },
   {
+    "name": "well-prepared-ru",
+    "lang": "ru",
+    "examText": "Экзамен по базам данных: реляционная модель, SQL (SELECT, JOIN, GROUP BY), нормализация 1НФ 2НФ 3НФ, транзакции и ACID, индексы.",
+    "knowledgeLevel": "я готов на все 100, прорешал все билеты, знаю SQL, нормализацию и ACID наизусть, уверен в себе",
+    "daysLeft": 5,
+    "expectTopics": ["sql", "нормал", "acid", "транзак", "индекс", "join"],
+    "expectCookedBelow": 35
+  },
+  {
     "name": "operating-systems-ru",
     "lang": "ru",
     "examText": "Экзамен по операционным системам: процессы и потоки, планирование CPU (FCFS, SJF, Round Robin), взаимные блокировки и их предотвращение, виртуальная память, страничная организация, замещение страниц (LRU, FIFO), файловые системы.",

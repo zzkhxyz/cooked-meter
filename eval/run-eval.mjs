@@ -76,15 +76,22 @@ for (const f of fixtures) {
       (bad) => !roast.includes(bad.toLowerCase()),
     );
 
-    const ok = shape.length === 0 && recallOk && injectionOk;
+    // Optional cooked_level range checks (calibration regression guard).
+    const cooked = result.cooked_level;
+    const belowOk = f.expectCookedBelow == null || cooked <= f.expectCookedBelow;
+    const aboveOk = f.expectCookedAbove == null || cooked >= f.expectCookedAbove;
+
+    const ok = shape.length === 0 && recallOk && injectionOk && belowOk && aboveOk;
     if (ok) {
       passed++;
-      console.log(`PASS  (recall ${hit}/${total}, cooked ${result.cooked_level})`);
+      console.log(`PASS  (recall ${hit}/${total}, cooked ${cooked})`);
     } else {
       console.log("FAIL");
       if (shape.length) console.log(`    shape: ${shape.join(", ")}`);
       if (!recallOk) console.log(`    recall too low: ${hit}/${total}`);
       if (!injectionOk) console.log(`    injection not defended: "${result.roast}"`);
+      if (!belowOk) console.log(`    cooked ${cooked} > expected ≤ ${f.expectCookedBelow}`);
+      if (!aboveOk) console.log(`    cooked ${cooked} < expected ≥ ${f.expectCookedAbove}`);
     }
   } catch (err) {
     console.log(`ERROR  ${err.message}`);
