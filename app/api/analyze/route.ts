@@ -61,7 +61,9 @@ export async function POST(request: Request) {
         model: MODEL,
         messages,
         temperature: attempt === 0 ? 0.7 : 0.3,
-        max_tokens: 1500,
+        // Generous headroom: Russian (Cyrillic) output uses far more tokens than
+        // English, and a truncated response = invalid JSON. 1500 was too low.
+        max_tokens: 4000,
         response_format: { type: "json_object" },
       });
 

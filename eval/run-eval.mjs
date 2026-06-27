@@ -60,6 +60,7 @@ for (const f of fixtures) {
         examText: f.examText,
         knowledgeLevel: f.knowledgeLevel,
         daysLeft: f.daysLeft,
+        lang: f.lang,
       }),
     });
     const payload = await res.json();

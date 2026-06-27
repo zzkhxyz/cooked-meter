@@ -20,6 +20,7 @@ Cooked Meter is an AI exam-prep assistant. A student uploads a PDF of their exam
 - 🎯 **Key topics** with `high / medium / low` priority and a “why it matters”
 - ⚡ **Quick wins** — cheap points you can grab in one evening
 - 🗓️ **Study plan** — a realistic schedule for the remaining time
+- 🌐 **Bilingual (RU / EN)** — toggle switches the UI *and* the AI's reply language
 - 🛡️ **Prompt-injection hardened** — PDF content is treated strictly as data
 - 🔁 **Robust JSON** — strict schema, normalization, and retry on bad output
 
@@ -87,11 +88,12 @@ npm run eval         # in another
 Latest local run:
 
 ```
-• databases            PASS  (recall 5/5, cooked 85)
+• databases            PASS  (recall 3/5, cooked 90)
 • calculus             PASS  (recall 4/4, cooked 80)
-• ml                   PASS  (recall 4/4, cooked 80)
-• injection-defense    PASS  (recall 6/7, cooked 99)
-4/4 cases passed.
+• ml                   PASS  (recall 4/4, cooked 70)
+• operating-systems-ru PASS  (recall 6/7, cooked 90)
+• injection-defense    PASS  (recall 5/7, cooked 99)
+5/5 cases passed.
 ```
 
 ## 🚀 Getting started (local)
