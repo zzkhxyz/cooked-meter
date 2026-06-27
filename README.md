@@ -6,7 +6,7 @@ Cooked Meter is an AI exam-prep assistant. A student uploads a PDF of their exam
 
 **Why it works:** funny + useful. The roast makes it shareable (students screenshot the *Cooked Meter*), the analysis makes it actually helpful.
 
-🔗 **Live demo:** _add your Vercel URL here after deploy_
+🔗 **Live demo:** **[cooked-meter-kappa.vercel.app](https://cooked-meter-kappa.vercel.app)**
 
 <!-- 📸 Add screenshots here: a screenshot of the form + a screenshot of a result with the Cooked Meter. -->
 
