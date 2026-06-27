@@ -1,6 +1,7 @@
 "use client";
 
 import type { AnalysisResult, Priority } from "@/lib/types";
+import { STRINGS, type Lang } from "@/lib/i18n";
 import { CookedMeter } from "./CookedMeter";
 
 const PRIORITY_STYLES: Record<Priority, string> = {
@@ -9,7 +10,8 @@ const PRIORITY_STYLES: Record<Priority, string> = {
   low: "bg-emerald-500/15 text-emerald-300 ring-emerald-500/30",
 };
 
-export function ResultView({ result }: { result: AnalysisResult }) {
+export function ResultView({ result, lang }: { result: AnalysisResult; lang: Lang }) {
+  const t = STRINGS[lang];
   return (
     <div className="space-y-6">
       {/* Roast */}
@@ -21,12 +23,12 @@ export function ResultView({ result }: { result: AnalysisResult }) {
 
       {/* Cooked Meter */}
       <div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-6">
-        <CookedMeter level={result.cooked_level} />
+        <CookedMeter level={result.cooked_level} lang={lang} />
       </div>
 
       {/* Key topics */}
       {result.key_topics.length > 0 && (
-        <Section title="🎯 Key topics" subtitle="What this exam is really testing">
+        <Section title={t.topicsTitle} subtitle={t.topicsSub}>
           <ul className="space-y-3">
             {result.key_topics.map((t, i) => (
               <li
@@ -50,7 +52,7 @@ export function ResultView({ result }: { result: AnalysisResult }) {
 
       {/* Quick wins */}
       {result.quick_wins.length > 0 && (
-        <Section title="⚡ Quick wins" subtitle="Cheap points you can grab tonight">
+        <Section title={t.winsTitle} subtitle={t.winsSub}>
           <ul className="space-y-2">
             {result.quick_wins.map((w, i) => (
               <li
@@ -67,7 +69,7 @@ export function ResultView({ result }: { result: AnalysisResult }) {
 
       {/* Study plan */}
       {result.study_plan.length > 0 && (
-        <Section title="🗓️ Study plan" subtitle="Your escape route">
+        <Section title={t.planTitle} subtitle={t.planSub}>
           <ol className="space-y-3">
             {result.study_plan.map((s, i) => (
               <li key={i} className="flex gap-4 rounded-xl border border-white/10 bg-zinc-900/60 p-4">

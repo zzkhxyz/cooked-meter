@@ -27,4 +27,6 @@ export interface AnalyzeRequest {
   examText: string;
   knowledgeLevel: string;
   daysLeft?: number | null;
+  /** Language for the AI's reply: "ru" or "en". */
+  lang?: "ru" | "en";
 }

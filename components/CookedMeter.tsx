@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { verdict, STRINGS, type Lang } from "@/lib/i18n";
 
 /** The signature visual: a 0–100 "how cooked are you" gauge. */
-export function CookedMeter({ level }: { level: number }) {
+export function CookedMeter({ level, lang }: { level: number; lang: Lang }) {
   const clamped = Math.max(0, Math.min(100, level));
   const [width, setWidth] = useState(0);
 
@@ -13,13 +14,13 @@ export function CookedMeter({ level }: { level: number }) {
     return () => cancelAnimationFrame(id);
   }, [clamped]);
 
-  const { label, emoji } = verdict(clamped);
+  const { label, emoji } = verdict(clamped, lang);
 
   return (
     <div className="w-full">
       <div className="mb-2 flex items-baseline justify-between">
         <span className="text-sm font-medium uppercase tracking-wider text-zinc-400">
-          Cooked Meter
+          {STRINGS[lang].meterLabel}
         </span>
         <span className="text-3xl font-black tabular-nums text-white">
           {clamped}
@@ -44,12 +45,4 @@ export function CookedMeter({ level }: { level: number }) {
       </p>
     </div>
   );
-}
-
-function verdict(level: number): { label: string; emoji: string } {
-  if (level < 25) return { label: "Lightly toasted — you got this", emoji: "😎" };
-  if (level < 50) return { label: "Medium rare — needs work", emoji: "😅" };
-  if (level < 75) return { label: "Well done — start grinding", emoji: "😰" };
-  if (level < 90) return { label: "Burnt — code red", emoji: "🔥" };
-  return { label: "Cremated — pray & grind", emoji: "💀" };
 }

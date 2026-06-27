@@ -43,7 +43,13 @@ export async function POST(request: Request) {
   }
 
   const truncated = examText.length > MAX_EXAM_CHARS;
-  const messages = buildMessages({ examText, knowledgeLevel, daysLeft: body.daysLeft });
+  const lang = body.lang === "en" ? "en" : "ru";
+  const messages = buildMessages({
+    examText,
+    knowledgeLevel,
+    daysLeft: body.daysLeft,
+    lang,
+  });
 
   const groq = new Groq({ apiKey });
 
