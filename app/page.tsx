@@ -13,6 +13,7 @@ export default function Home() {
   const [days, setDays] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
   const [truncated, setTruncated] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -31,6 +32,7 @@ export default function Home() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setErrorDetail(null);
     setResult(null);
     setTruncated(false);
 
@@ -64,6 +66,13 @@ export default function Home() {
         );
       } else {
         setError(err instanceof Error ? err.message : "Unexpected error.");
+        // Temporary diagnostic: surface where it actually failed (helps debug
+        // mobile-only issues we can't reproduce on desktop).
+        if (err instanceof Error) {
+          setErrorDetail(
+            `${err.name} @ ${status}\n${(err.stack || "no stack").slice(0, 600)}`,
+          );
+        }
       }
     } finally {
       setStatus("idle");
@@ -142,9 +151,14 @@ export default function Home() {
         </div>
 
         {error && (
-          <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
-            {error}
-          </p>
+          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+            <p>{error}</p>
+            {errorDetail && (
+              <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap break-all text-xs text-red-400/80">
+                {errorDetail}
+              </pre>
+            )}
+          </div>
         )}
 
         <button
