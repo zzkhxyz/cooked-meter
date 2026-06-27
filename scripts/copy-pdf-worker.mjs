@@ -10,7 +10,15 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const src = join(root, "node_modules", "pdfjs-dist", "build", "pdf.worker.min.mjs");
+// Legacy build = transpiled for broad browser support (older mobile Safari etc.).
+const src = join(
+  root,
+  "node_modules",
+  "pdfjs-dist",
+  "legacy",
+  "build",
+  "pdf.worker.min.mjs",
+);
 const destDir = join(root, "public");
 const dest = join(destDir, "pdf.worker.min.mjs");
 

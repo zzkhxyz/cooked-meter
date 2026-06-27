@@ -21,7 +21,12 @@ export class ScannedPdfError extends Error {
  * has no extractable text layer (i.e. it's a scan / images only).
  */
 export async function extractPdfText(file: File): Promise<string> {
-  const pdfjsLib = await import("pdfjs-dist");
+  // Use the LEGACY build: it's transpiled for broad browser support, including
+  // older mobile Safari where the modern build crashes with
+  // "undefined is not a function" (missing APIs like Promise.withResolvers).
+  const pdfjsLib = (await import(
+    "pdfjs-dist/legacy/build/pdf.mjs"
+  )) as unknown as typeof import("pdfjs-dist");
   // Self-hosted worker copied into /public by scripts/copy-pdf-worker.mjs.
   // Same origin + version-matched = no CDN/CORS/MIME failures.
   pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
