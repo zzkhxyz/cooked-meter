@@ -22,8 +22,9 @@ export class ScannedPdfError extends Error {
  */
 export async function extractPdfText(file: File): Promise<string> {
   const pdfjsLib = await import("pdfjs-dist");
-  // Use the worker that exactly matches the installed pdfjs-dist version.
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+  // Self-hosted worker copied into /public by scripts/copy-pdf-worker.mjs.
+  // Same origin + version-matched = no CDN/CORS/MIME failures.
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
   const data = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data }).promise;
